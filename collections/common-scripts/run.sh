@@ -50,6 +50,33 @@ readonly scl_el="$(os_major_version)"
 
 resDirAll=$(mktemp -d /tmp/sclo-results-XXXXXX)
 
+# CentOS 6 does not have CBS cofiguration available – provide it
+mkdir -p /etc/koji.conf.d && cat >/etc/koji.conf.d/cbs-koji.conf <<-'EOF'
+[cbs]
+
+;url of XMLRPC server
+server = https://cbs.centos.org/kojihub/
+
+;url of web interface
+weburl = https://cbs.centos.org/koji
+
+;url of package download site
+topurl = http://cbs.centos.org/kojifiles
+
+;path to the koji top directory
+topdir = /mnt/koji
+
+;client certificate
+cert = ~/.centos.cert
+
+;certificate of the CA that issued the client certificate
+ca = ~/.centos-server-ca.cert
+
+;certificate of the CA that issued the HTTP server certificate
+serverca = /etc/pki/tls/certs/ca-bundle.trust.crt
+EOF
+
+
 case "$REPOTYPE" in
     candidate|testing|release)
         echo "Making local repository for $REPOTYPE ..."

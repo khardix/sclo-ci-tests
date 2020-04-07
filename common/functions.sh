@@ -172,9 +172,9 @@ make_local_repo() {
 
   mkdir -p "${root_dir}" && pushd "${_}" >/dev/null 2>&1 || return
 
-  cbs list-tagged --quiet --latest "${tag}" \
+  koji --profile=cbs list-tagged --quiet --latest "${tag}" \
     | awk '{print $1;}' \
-    | xargs -P5 -n1 -- cbs download-build --quiet --arch=noarch --arch="${basearch}" \
+    | xargs -P5 -n1 -- koji --profile=cbs download-build --quiet --arch=noarch --arch="${basearch}" \
     || {
       echo "ERROR: Cannot download builds from ${tag}" >&2
       return 1

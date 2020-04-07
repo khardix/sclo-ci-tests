@@ -179,7 +179,8 @@ fi
 #ip=$(arp -e | grep "`virsh --connect=qemu:///system dumpxml  $name | grep "mac address"|sed "s/.*'\(.*\)'.*/\1/g"`" | \
 #      awk '{ printf  $1}')
 
-ip=$(arp -e |grep $(virsh --connect=qemu:///system  domiflist "$name" |grep -o -E "([0-9a-f]{2}:){5}([0-9a-f]{2})")  |grep -o -P "^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+# ip=$(arp -e |grep $(virsh --connect=qemu:///system  domiflist "$name" |grep -o -E "([0-9a-f]{2}:){5}([0-9a-f]{2})")  |grep -o -P "^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
+ip=$(while ! ip neigh|grep -oE '192\.168\.122\.\S+'; do sleep 1; done)
 
 echo "IP: $ip"
 
